@@ -1,3 +1,4 @@
 /input/merged-kg_edges.tsv
 /input/merged-kg_nodes.tsv
 /output/kg-microbe.ttl
+/input/registry.json
