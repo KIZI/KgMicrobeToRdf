@@ -130,17 +130,18 @@ id_to_uri = {}
 for row in rowsIt:
     i += 1
     if i % 50000 == 0: print(f"processed lines: {i}")
-    uri = row[header["iri"]].split("|")[0]
+    uri = row[header["iri"]].split("|")[0].strip()
+    id = row[header["id"]].strip()
     if not uri:
-        uri = extract_uri(row[header["id"]])
+        uri = extract_uri(id)
     if not uri: continue
     puri = None
     for p, ns in prefixes.items():
         if uri.startswith(ns):
-            puri = f"{p}:{uri.lstrip(ns)}"
+            puri = f"{p}:{re.sub("([~.!$&'\"()*+,;=/?#@%])", r"\\\1", uri.lstrip(ns))}"
             break
     s = puri if puri else f"<{uri}>"
-    id_to_uri[row[header["id"]]] = s
+    id_to_uri[id] = s
     n = str(row[header["name"]]).strip()
     if len(n) > 0: add_label(s, n)
     if not uri.startswith("urn:unknown:"):
@@ -171,9 +172,9 @@ used_predicates = set()
 for row in rowsIt:
     i += 1
     if i % 50000 == 0: print(f"processed lines: {i}")
-    s = id_to_uri.get(row[header["subject"]])
-    o = id_to_uri.get(row[header["object"]])
-    p = row[header["predicate"]]
+    s = id_to_uri.get(row[header["subject"]].strip())
+    o = id_to_uri.get(row[header["object"]].strip())
+    p = row[header["predicate"]].strip()
     p_parts = p.split(":", 1)
     if s and o and len(p_parts) == 2 and p_parts[0] in prefixes:
         used_predicates.add(p)
