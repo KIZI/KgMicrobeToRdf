@@ -1,7 +1,7 @@
 # KG microbe: TSV files into one RDF (turtle) file
 
-Source: https://kg-hub.berkeleybop.io/kg-microbe/current/index.html
-Bioregistry source: https://bioregistry.io/registry/
+- Source: https://kg-hub.berkeleybop.io/kg-microbe/current/index.html
+- Bioregistry source: https://bioregistry.io/registry/
 
 
 ```python
