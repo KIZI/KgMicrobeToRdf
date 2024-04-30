@@ -8,6 +8,7 @@
 import csv
 import json
 import re
+import urllib.parse
 ```
 
 Relative paths to the input and output files
@@ -88,12 +89,15 @@ def add_reference(s: str, ref: str):
 def extract_uri(id: str):
     uri_parts = id.split(":", 1)
     if len(uri_parts) == 1:
-        return f"urn:unknown:{id}"
+        encoded_id = urllib.parse.quote(id, safe="")
+        return f"urn:unknown:{encoded_id}"
     elif len(uri_parts) > 1:
         prefix = uri_parts[0].lower()
         def_prefix = bioregistry_prefixes.get(prefix)
         if def_prefix is None:
-            return f"urn:unknown:{id}"
+            unprefixes.add(prefix)
+            encoded_id = urllib.parse.quote(id, safe="")
+            return f"urn:unknown:{encoded_id}"
         else:
             uf = def_prefix["uri_format"]  # type: str
             if uf is None or "$1" not in uf:
